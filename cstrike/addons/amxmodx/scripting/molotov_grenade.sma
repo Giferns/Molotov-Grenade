@@ -879,6 +879,10 @@ public FireMolotov_Think_Post(iEntity)
 }
 
 giveNade(const id, count = 1, maximum = 1) {
+	if(!is_user_alive(id) || is_user_bot(id)) {
+		return NULLENT;
+	}
+
 	new item = rg_get_player_item(id, ITEM_CLASSNAME, GRENADE_SLOT);
 	if (item != 0) {
 		giveAmmo(id, count, AMMO_ID, maximum);
