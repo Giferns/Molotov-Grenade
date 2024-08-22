@@ -402,7 +402,7 @@ public plugin_natives()
 
 public NativeGiveUserMolotov(plugin, params)
 {
-    enum { arg_player = 1 };
+    enum { arg_player = 1, arg_count, arg_maximum };
 
     new id = get_param(arg_player);
 
@@ -411,7 +411,7 @@ public NativeGiveUserMolotov(plugin, params)
         return false;
     }
 
-    giveNade(id);
+    giveNade(id, get_param(arg_count), get_param(arg_maximum));
 
     return true;
 }
@@ -877,10 +877,10 @@ public FireMolotov_Think_Post(iEntity)
     set_entvar(iEntity, var_nextthink, get_gametime() + 0.025);
 }
 
-giveNade(const id) {
+giveNade(const id, count = 1, maximum = 1) {
 	new item = rg_get_player_item(id, ITEM_CLASSNAME, GRENADE_SLOT);
 	if (item != 0) {
-		giveAmmo(id, 1, AMMO_ID, 1);
+		giveAmmo(id, count, AMMO_ID, maximum);
 		return item;
 	}
 
@@ -916,6 +916,8 @@ giveNade(const id) {
 		set_entvar(item, var_flags, FL_KILLME);
 		return NULLENT;
 	}
+
+	set_member(id, m_rgAmmo, count, AMMO_ID);
 
 	return item;
 }
