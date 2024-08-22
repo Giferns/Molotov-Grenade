@@ -160,7 +160,7 @@ public plugin_init() {
 		create_cvar(
 			"molotov_equip_access", "0", FCVAR_SERVER,
 			.description = fmt("%L", LANG_SERVER, "CVAR_EQUIP_ACCESS"),
-			.has_min = true, .min_val = 0.0,
+			.has_min = true, .min_val = 0.0
 			),
 		g_eCvar[CVAR_EQUIP_ACCESS]
 		);
