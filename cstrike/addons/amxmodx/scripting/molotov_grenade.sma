@@ -591,6 +591,7 @@ dropNade(const other){
 	set_entvar(dropnade, var_velocity, velocity);
 	engfunc(EngFunc_SetOrigin, dropnade, origin);
 
+	set_entvar(dropnade, var_iuser4, get_member(other, m_rgAmmo, AMMO_ID));
 	SetTouch(dropnade, "Drop_ItemMolotov_Touch");
 }
 #endif
@@ -1125,6 +1126,7 @@ explodeNade(const grenade) {
 			engfunc(EngFunc_SetOrigin, dropnade, origin);
 			set_entvar(dropnade, var_angles, angles);
 
+			set_entvar(dropnade, var_iuser4, 1);
 			SetTouch(dropnade, "Drop_ItemMolotov_Touch");
 
 			destroyNade(grenade);
@@ -1558,13 +1560,25 @@ public Drop_ItemMolotov_Touch(item, other)
 	if (bitAccess && ~get_user_flags(other) & bitAccess)
 		return;
 
-	new ammo = rg_get_player_item(other, ITEM_CLASSNAME, GRENADE_SLOT);
-	if (ammo != 0) return;
+	new iWpAmmo = get_entvar(item, var_iuser4);
+	new iToAdd = iWpAmmo;
+	new iPlayerAmmo = get_member(other, m_rgAmmo, AMMO_ID);
 
-	giveNade(other);
-	rh_emit_sound2(other, 0, CHAN_ITEM, GUNPICKUP_SOUND);
+	if(rg_get_player_item(other, ITEM_CLASSNAME, GRENADE_SLOT)) {
+		if(iPlayerAmmo >= iWpAmmo) {
+			return;
+		}
+
+		iToAdd = iWpAmmo - iPlayerAmmo;
+	}
+
+	if(iPlayerAmmo) {
+		emit_sound(other, CHAN_ITEM, GUNPICKUP_SOUND, VOL_NORM, ATTN_NORM, 0, PITCH_NORM);
+	}
 
 	set_entvar(item, var_flags, FL_KILLME);
+
+	giveNade(other, iToAdd, iWpAmmo);
 }
 
 destroyNade(const grenade) {
