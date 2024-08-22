@@ -1,6 +1,6 @@
 [ru]
 CVAR_ACCESS = Флаги доступа - для покупки или выдачи молотова (требует наличия вписанных - "abc" / пустая строка "" - покупка доступна всем)
-CVAR_EQUIP_ACCESS = Автоматически выдавать молотов в начале раунда
+CVAR_EQUIP_ACCESS = Сколько гранат выдавать при спавне
 CVAR_CHECK_BUYZONE = Проверять находится ли игрок в зоне покупки
 CVAR_COST = Цена молотова
 CVAR_BUY_LIMIT = Сколько молотовых можно купить за один раунд (значение: -1 убирает лимит)
@@ -29,7 +29,7 @@ NTF_CARRY_ANY = Вы не можете взять больше Молотовы�
 
 [en]
 CVAR_ACCESS = Access flags - to purchase or issue molotovs (requires "abc" / empty string "" - purchase available to all)
-CVAR_EQUIP_ACCESS = Automatically issue molotovs at the start of the round.
+CVAR_EQUIP_ACCESS = How many grenades to give out at spawn.
 CVAR_CHECK_BUYZONE = Check if the player is in the buy zone.
 CVAR_COST = Molotov price
 CVAR_BUY_LIMIT = How many molotov can be bought in one round (value: -1 removes the limit)

@@ -160,7 +160,6 @@ public plugin_init() {
 			"molotov_equip_access", "0", FCVAR_SERVER,
 			.description = fmt("%L", LANG_SERVER, "CVAR_EQUIP_ACCESS"),
 			.has_min = true, .min_val = 0.0,
-			.has_max = true, .max_val = 1.0
 			),
 		g_eCvar[CVAR_EQUIP_ACCESS]
 		);
@@ -511,10 +510,11 @@ public CBasePlayer_OnSpawnEquip_Post(const id){
 		return;
 
 	BuyLimit[id] = g_eCvar[CVAR_BUY_LIMIT];
-	new bitAccess = g_eCvar[CVAR_BUY_ACCESS];
 
-	if(g_eCvar[CVAR_EQUIP_ACCESS] < 1)
+	if(!g_eCvar[CVAR_EQUIP_ACCESS])
 		return;
+
+	new bitAccess = g_eCvar[CVAR_BUY_ACCESS];
 
 	if (bitAccess && ~get_user_flags(id) & bitAccess)
 		return;
@@ -523,7 +523,7 @@ public CBasePlayer_OnSpawnEquip_Post(const id){
         return;
 
 
-	giveNade(id);
+	giveNade(id, g_eCvar[CVAR_EQUIP_ACCESS], g_eCvar[CVAR_EQUIP_ACCESS]);
 }
 
 public CBasePlayer_Killed_Post(victim, attacker, inflictor){
