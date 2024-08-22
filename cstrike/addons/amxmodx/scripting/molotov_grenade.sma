@@ -3,6 +3,7 @@
 #include <hamsandwich>
 #include <reapi>
 #include <xs>
+#include <molotov>
 
 #define PLUGIN_NAME "Molotov Grenade"
 #define PLUGIN_VERSION "1.0.3"
