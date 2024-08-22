@@ -485,7 +485,7 @@ public BuyMolotov_Cmd(id) {
 
 	rg_add_account(id, -g_eCvar[CVAR_COST]);
 	rh_emit_sound2(id, 0, CHAN_ITEM, AMMOPICKUP_SOUND);
-	giveNade(id);
+	giveNade(id, 1, 1);
 	BuyLimit[id]--;
 	return PLUGIN_HANDLED;
 }
