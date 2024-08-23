@@ -22,11 +22,10 @@ ___
 // Default: ""
 molotov_buy_access ""
 
-// Автоматически выдавать коктейль молотова в начале раунда.
+// Сколько гранат выдавать при спавне.
 // -
 // Default: "0"
 // Minimum: "0.000000"
-// Maximum: "1.000000"
 molotov_equip_access "0"
 
 // Проверка нахождения в зоне покупки.
@@ -180,7 +179,7 @@ ___
 - Плавное затухание отрисовываемых спрайтов огня.
 - Горящий фитиль в полете.
 - После горения на земле остаются следы *декали.
-- Частичная поддержка Health Nade. *Жертвуем оружием WEAPON_TMP 
+- Частичная поддержка Health Nade. *Жертвуем оружием WEAPON_TMP
   - ![HUD](images/hud.jpg)
 ___
 
@@ -188,7 +187,7 @@ ___
 
 ```
 native IsUserHasMolotov(params);
-native GiveUserMolotov(params);
+native GiveUserMolotov(params, count = 1, maximum = 1);
 
 if(!IsUserHasMolotov(id))
   GiveUserMolotov(id);
