@@ -73,7 +73,7 @@ new const GUNPICKUP_SOUND[] = "items/gunpickup2.wav";
 new const AMMOPICKUP_SOUND[] = "items/9mmclip1.wav";
 
 enum CvarStruct {
-	CVAR_BUY_ACCESS,
+	CVAR_BUY_ACCESS[32],
 	CVAR_EQUIP_ACCESS,
 	CVAR_CHECK_BUYZONE,
 	CVAR_COST,
@@ -98,7 +98,6 @@ enum CvarStruct {
 	CVAR_SKY_FORCE
 }
 
-new g_pCvarBuyAccess;
 new g_pCvarSmokeOwner;
 new g_eCvar[CvarStruct];
 new BuyLimit[MAX_PLAYERS + 1];
@@ -151,10 +150,14 @@ public plugin_init() {
 
 	register_dictionary("molotov_grenade.txt");
 
-	g_pCvarBuyAccess = create_cvar(
-		"molotov_buy_access", "", FCVAR_SERVER,
-		.description = fmt("%L", LANG_SERVER, "CVAR_ACCESS")
-		);
+	bind_pcvar_string(
+		create_cvar(
+			"molotov_buy_access", "", FCVAR_SERVER,
+			.description = fmt("%L", LANG_SERVER, "CVAR_ACCESS")
+			),
+		g_eCvar[CVAR_BUY_ACCESS],
+		charsmax(g_eCvar[CVAR_BUY_ACCESS])
+	);
 
 	bind_pcvar_num(
 		create_cvar(
@@ -363,10 +366,6 @@ public plugin_init() {
 	RegisterHookChain(RG_CGrenade_ExplodeSmokeGrenade, "CSGrenade_ExplodeSmokeGrenade_Pre", false);
 	RegisterHam(Ham_Think, "env_sprite", "FireMolotov_Think_Post", true);
 
-	new szAccess[24];
-	get_pcvar_string(g_pCvarBuyAccess, szAccess, charsmax(szAccess));
-	g_eCvar[CVAR_BUY_ACCESS] = read_flags(szAccess);
-
 	MsgIdAmmoPickup = get_user_msgid("AmmoPickup");
 
 #if WEAPON_NEW_ID == WEAPON_GLOCK
@@ -437,7 +436,6 @@ public BuyMolotov_Cmd(id) {
 
 	new Float: flCurTime = get_gametime();
 	new Float: flRoundStartTime = get_member_game(m_fRoundStartTime);
-	new bitAccess = g_eCvar[CVAR_BUY_ACCESS];
 
 	if (g_eCvar[CVAR_CHECK_BUYZONE] && !rg_get_user_buyzone(id)) {
 		return PLUGIN_HANDLED;
@@ -449,7 +447,9 @@ public BuyMolotov_Cmd(id) {
 		return PLUGIN_HANDLED;
 	}
 
-	if (bitAccess && ~get_user_flags(id) & bitAccess){
+	new bitAccess = read_flags(g_eCvar[CVAR_BUY_ACCESS]);
+
+	if (bitAccess && !(get_user_flags(id) & bitAccess)) {
 		client_print(id, print_center, "%L", LANG_PLAYER, "NTF_WPN_NA");
 
 		return PLUGIN_HANDLED;
@@ -515,9 +515,9 @@ public CBasePlayer_OnSpawnEquip_Post(const id){
 	if(!g_eCvar[CVAR_EQUIP_ACCESS])
 		return;
 
-	new bitAccess = g_eCvar[CVAR_BUY_ACCESS];
+	new bitAccess = read_flags(g_eCvar[CVAR_BUY_ACCESS]);
 
-	if (bitAccess && ~get_user_flags(id) & bitAccess)
+	if (bitAccess && !(get_user_flags(id) & bitAccess))
 		return;
 
 	if(get_member_game(m_iTotalRoundsPlayed) + 1 < g_eCvar[CVAR_LIMIT_ROUND])
@@ -1560,9 +1560,9 @@ public Drop_ItemMolotov_Touch(item, other)
 
 	if (!ExecuteHam(Ham_IsPlayer, other)) return;
 
-	new bitAccess = g_eCvar[CVAR_BUY_ACCESS];
+	new bitAccess = read_flags(g_eCvar[CVAR_BUY_ACCESS]);
 
-	if (bitAccess && ~get_user_flags(other) & bitAccess)
+	if (bitAccess && !(get_user_flags(other) & bitAccess))
 		return;
 
 	new iWpAmmo = get_entvar(item, var_iuser4);
